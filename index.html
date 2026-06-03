@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIROH - Sistema Municipal de Gestión Hídrica</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .sidebar-item { @apply flex items-center px-4 py-3 text-gray-300 hover:bg-slate-700 hover:text-white rounded-lg transition-colors cursor-pointer text-sm font-medium; }
+        .submenu-item { @apply flex items-center pl-8 pr-4 py-2 text-xs text-gray-400 hover:bg-slate-800 hover:text-emerald-400 transition-colors cursor-pointer; }
+        .active-tab { @apply bg-emerald-600 text-white font-semibold; }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 h-screen flex overflow-hidden">
+
+    <aside class="w-72 bg-slate-900 text-white flex flex-col h-full z-20 shadow-xl">
+        <div class="p-5 border-b border-slate-800 flex items-center space-x-3 bg-slate-950">
+            <div class="bg-emerald-500 p-2 rounded-lg text-slate-950 font-black text-xl tracking-wider">SIROH</div>
+            <div>
+                <h1 class="text-sm font-bold tracking-wide uppercase text-emerald-400">Alcaldía Municipal</h1>
+                <p class="text-[10px] text-gray-400">Gestión de Cuencas y Alertas</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+            
+            <div class="space-y-1">
+                <div class="sidebar-item" onclick="toggleMenu('menu-obras')">
+                    <span class="mr-3 text-lg">🛡️</span> <span>SIROH - Obras Hidráulicas</span>
+                </div>
+                <div id="menu-obras" class="hidden space-y-1 bg-slate-950/40 rounded-lg py-1">
+                    <div class="submenu-item">📋 Banco de Evaluaciones (Bloqueado)</div>
+                    <div class="submenu-item">➕ Nueva Inspección (Bloqueado)</div>
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <div class="sidebar-item" onclick="toggleMenu('menu-meteo')">
+                    <span class="mr-3 text-lg">❄️</span> <span>Meteorología Municipal</span>
+                </div>
+                <div id="menu-meteo" class="hidden space-y-1 bg-slate-950/40 rounded-lg py-1">
+                    <div class="submenu-item">📡 Red de Estaciones (27)</div>
+                    <div class="submenu-item">📥 Inyección / Carga Diaria</div>
+                    <div class="submenu-item">📊 Matriz Histórica (2019-2026)</div>
+                    <div class="submenu-item">📅 Resumen Anual Consolidado</div>
+                    <div class="submenu-item">📈 Dashboard Analítico</div>
+                </div>
+            </div>
+
+            <div class="space-y-1">
+                <div class="sidebar-item bg-slate-800 text-emerald-400 font-semibold" onclick="toggleMenu('menu-morfometria')">
+                    <span class="mr-3 text-lg">📐</span> <span>Morfometría Municipal</span>
+                </div>
+                <div id="menu-morfometria" class="space-y-1 bg-slate-950/50 rounded-lg py-1">
+                    <div class="submenu-item text-emerald-400 font-medium" onclick="switchView('banco-morfo')">🗄️ Banco de Morfometrías</div>
+                    <div class="submenu-item" onclick="switchView('ingresar-morfo')">✍️ Ingresar Morfometría (+ Caudal)</div>
+                    <div class="submenu-item" onclick="switchView('hidrograma-unitario')">📉 Hidrograma Unitario</div>
+                </div>
+            </div>
+
+        </nav>
+
+        <div class="p-4 bg-slate-950 border-t border-slate-800 text-center text-[10px] text-gray-500 font-mono">
+            V2.6 - Dirección de Mitigación 2026
+        </div>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden bg-slate-50">
+        
+        <header class="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-8 shadow-sm">
+            <div class="flex items-center space-x-3">
+                <span class="text-xs font-bold uppercase tracking-widest bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded">Módulo 5</span>
+                <h2 id="page-title" class="text-xl font-bold text-slate-800">Banco de Morfometrías</h2>
+            </div>
+            <div class="text-sm font-medium text-slate-500 flex items-center">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2"></span> Entorno de Análisis Hidrológico
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+
+            <section id="view-banco-morfo" class="view-panel space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="text-lg font-bold mb-4 text-slate-800">Historial Registrado de Parámetros de Cuencas</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-slate-100 border-b border-slate-200 text-slate-600 font-semibold">
+                                    <th class="p-3">Código</th>
+                                    <th class="p-3">Nombre Cuenca</th>
+                                    <th class="p-3">Área (Km²)</th>
+                                    <th class="p-3">Gravelius ($K_c$)</th>
+                                    <th class="p-3">Horton ($R_f$)</th>
+                                    <th class="p-3">Caudal Estimado ($Q_p$)</th>
+                                    <th class="p-3 text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 text-slate-700">
+                                <tr>
+                                    <td class="p-3 font-mono font-bold text-emerald-600">CU-01-A</td>
+                                    <td class="p-3 font-medium">Subcuenca Quebrada San Miguel</td>
+                                    <td class="p-3">24.50</td>
+                                    <td class="p-3">1.18 (Clase 1 - Redonda)</td>
+                                    <td class="p-3">0.42</td>
+                                    <td class="p-3 font-semibold text-rose-600">18.42 m³/s</td>
+                                    <td class="p-3 text-center"><button class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded text-xs">Ver Ficha</button></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-mono font-bold text-emerald-600">CU-04-B</td>
+                                    <td class="p-3 font-medium">Río Mucujún (Sector Bajo)</td>
+                                    <td class="p-3">112.10</td>
+                                    <td class="p-3">1.55 (Clase 3 - Alargada)</td>
+                                    <td class="p-3">0.21</td>
+                                    <td class="p-3 font-semibold text-rose-600">64.15 m³/s</td>
+                                    <td class="p-3 text-center"><button class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded text-xs">Ver Ficha</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-ingresar-morfo" class="view-panel hidden space-y-6">
+                <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200 max-w-5xl mx-auto">
+                    
+                    <div class="border-b-2 border-slate-200 pb-4 mb-6 flex justify-between items-start">
+                        <div>
+                            <h3 class="text-xl font-black text-slate-900 tracking-tight">FICHA DE REGISTRO: MORFOMETRÍA DE CUENCAS HIDROGRÁFICAS</h3>
+                            <p class="text-xs text-slate-500 mt-1 uppercase tracking-wider font-semibold">Dirección General de Mitigación y Control de Inundaciones (DGMCI / MINAGUAS)</p>
+                        </div>
+                        <span class="text-xs font-mono bg-slate-100 border border-slate-300 text-slate-600 px-3 py-1 rounded">Ficha Nº: MOR-2026-N</span>
+                    </div>
+
+                    <form id="form-morfometria" oninput="calcularMorfometriaYCaudal()" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-slate-50 p-4 rounded-lg border border-slate-200">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Código de Cuenca</label>
+                                <input type="text" class="w-full p-2 border border-slate-300 rounded text-sm bg-white" placeholder="Ej: CU-05-C">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Cuerpo de Agua Principal</label>
+                                <input type="text" class="w-full p-2 border border-slate-300 rounded text-sm bg-white" placeholder="Ej: Río Albarregas">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Huso / Coordenada E</label>
+                                <input type="text" class="w-full p-2 border border-slate-300 rounded text-sm bg-white" placeholder="Reg: 19N / 234567">
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="text-sm font-bold text-emerald-700 uppercase tracking-wide mb-3 border-b border-emerald-100 pb-1">Parámetros Lineales, Altimétricos y de Superficie</h4>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-600 mb-1">Área de Cuenca ($A$) en $Km^2$</label>
+                                    <input type="number" id="input-area" step="0.01" class="w-full p-2 border border-slate-300 rounded text-sm font-mono" placeholder="0.00">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-600 mb-1">Perímetro ($P$) en $Km$</label>
+                                    <input type="number" id="input-perimetro" step="0.01" class="w-full p-2 border border-slate-300 rounded text-sm font-mono" placeholder="0.00">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-600 mb-1">Longitud Cauce Principal ($L_c$) $Km$</label>
+                                    <input type="number" id="input-long-cauce" step="0.01" class="w-full p-2 border border-slate-300 rounded text-sm font-mono" placeholder="0.00">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-600 mb-1">Desnivel Altitudinal ($H_t$) $m$</label>
+                                    <input type="number" class="w-full p-2 border border-slate-300 rounded text-sm font-mono" placeholder="Ej: 1200">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-900 text-white p-5 rounded-xl shadow-inner">
+                            <div>
+                                <h4 class="text-xs font-bold text-emerald-400 uppercase tracking-widest mb-3">Índices Geométricos Calculados</h4>
+                                <div class="space-y-2 text-sm">
+                                    <div class="flex justify-between border-b border-slate-800 pb-1">
+                                        <span class="text-gray-400">Coef. Gravelius ($K_c$):</span>
+                                        <span id="calc-gravelius" class="font-mono font-bold text-amber-400">0.00</span>
+                                    </div>
+                                    <div class="flex justify-between border-b border-slate-800 pb-1">
+                                        <span class="text-gray-400">Interpretación Forma:</span>
+                                        <span id="calc-forma" class="font-semibold text-emerald-300">-</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-400">Relación de Horton ($R_f$):</span>
+                                        <span id="calc-horton" class="font-mono font-bold text-amber-400">0.00</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="border-t md:border-t-0 md:border-l border-slate-800 pt-4 md:pt-0 md:pl-6 flex flex-col justify-between">
+                                <div>
+                                    <h4 class="text-xs font-bold text-rose-400 uppercase tracking-widest mb-2">Estimación Analítica de Caudal ($Q = \frac{C \cdot I \cdot A}{3.6}$)</h4>
+                                    <div class="grid grid-cols-2 gap-2 mb-3">
+                                        <div>
+                                            <label class="block text-[10px] text-gray-400 uppercase">Coef. Escorrentía ($C$)</label>
+                                            <select id="param-c" class="w-full p-1 bg-slate-800 text-white border border-slate-700 rounded text-xs font-mono">
+                                                <option value="0.30">0.30 (Zona Bosque / Rural)</option>
+                                                <option value="0.55">0.55 (Semi-Urbano / Mixto)</option>
+                                                <option value="0.85">0.85 (Impermeable / Urbano)</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-[10px] text-gray-400 uppercase">Intensidad ($I$) mm/h</label>
+                                            <input type="number" id="param-i" value="45" class="w-full p-1 bg-slate-800 text-white border border-slate-700 rounded text-xs font-mono">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="bg-rose-950/50 border border-rose-800/60 p-3 rounded-lg flex items-center justify-between">
+                                    <span class="text-xs font-bold text-rose-300 uppercase">Caudal de Diseño ($Q_p$):</span>
+                                    <span id="calc-caudal" class="text-2xl font-black text-rose-400 font-mono">0.00 m³/s</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end">
+                            <button type="button" class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg text-sm shadow transition-all">
+                                Inyectar Datos al Módulo Morfometría
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section id="view-hidrograma-unitario" class="view-panel hidden space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 lg:col-span-1">
+                        <h3 class="text-base font-bold mb-4 text-slate-800 border-b pb-2">📋 Entrada de Datos para Hidrograma Unitario</h3>
+                        <form id="form-hu" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Duración en Exceso ($D$)</label>
+                                <select class="w-full p-2 border border-slate-300 rounded text-sm">
+                                    <option>1 Hora</option>
+                                    <option>2 Horas</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Precipitación Efectiva ($P_e$)</label>
+                                <input type="text" class="w-full p-2 border border-slate-300 rounded text-sm font-mono" value="1.00 cm" disabled>
+                                <p class="text-[10px] text-slate-400 mt-1">Normalizado a 1 cm de escorrentía directa.</p>
+                            </div>
+                            
+                            <div class="space-y-2">
+                                <label class="block text-xs font-bold text-slate-700 uppercase">Ordenadas de Tiempo y Caudal ($Q$)</label>
+                                <div class="grid grid-cols-2 gap-2 text-center font-bold text-[10px] text-slate-500 uppercase">
+                                    <div>Tiempo (Horas)</div>
+                                    <div>Caudal Unitario (m³/s/cm)</div>
+                                </div>
+                                <div class="space-y-1 max-h-52 overflow-y-auto pr-1" id="hu-inputs-container">
+                                    <div class="grid grid-cols-2 gap-2"><input type="text" value="0" class="p-1.5 border text-center text-xs font-mono rounded bg-slate-50" disabled><input type="number" value="0" class="hu-q-val p-1.5 border text-center text-xs font-mono rounded"></div>
+                                    <div class="grid grid-cols-2 gap-2"><input type="text" value="1" class="p-1.5 border text-center text-xs font-mono rounded bg-slate-50" disabled><input type="number" value="12" class="hu-q-val p-1.5 border text-center text-xs font-mono rounded"></div>
+                                    <div class="grid grid-cols-2 gap-2"><input type="text" value="2" class="p-1.5 border text-center text-xs font-mono rounded bg-slate-50" disabled><input type="number" value="35" class="hu-q-val p-1.5 border text-center text-xs font-mono rounded"></div>
+                                    <div class="grid grid-cols-2 gap-2"><input type="text" value="3" class="p-1.5 border text-center text-xs font-mono rounded bg-slate-50" disabled><input type="number" value="21" class="hu-q-val p-1.5 border text-center text-xs font-mono rounded"></div>
+                                    <div class="grid grid-cols-2 gap-2"><input type="text" value="4" class="p-1.5 border text-center text-xs font-mono rounded bg-slate-50" disabled><input type="number" value="8" class="hu-q-val p-1.5 border text-center text-xs font-mono rounded"></div>
+                                    <div class="grid grid-cols-2 gap-2"><input type="text" value="5" class="p-1.5 border text-center text-xs font-mono rounded bg-slate-50" disabled><input type="number" value="0" class="hu-q-val p-1.5 border text-center text-xs font-mono rounded"></div>
+                                </div>
+                            </div>
+
+                            <button type="button" onclick="renderizarHidrograma()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded shadow transition-colors uppercase tracking-wider">
+                                Generar Curva de Respuesta
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 lg:col-span-2 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-base font-bold mb-2 text-slate-800">📉 Gráfico del Hidrograma Unitario de la Cuenca</h3>
+                            <p class="text-xs text-slate-500 mb-4">Muestra la distribución temporal del escurrimiento superficial resultante de una lluvia efectiva unitaria.</p>
+                        </div>
+                        <div class="flex-1 min-h-[300px] relative flex items-center justify-center">
+                            <canvas id="canvasHidrograma"></canvas>
+                        </div>
+                        <div class="mt-4 bg-amber-50 border border-amber-200 p-3 rounded-lg text-xs text-amber-900">
+                            <strong>Nota de Ingeniería:</strong> Esta curva base permite obtener los hidrogramas de tormentas reales complejas mediante el principio de superposición lineal en el término de avenidas de la cuenca.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        // Manejador del colapso de submenús laterales
+        function toggleMenu(id) {
+            const menu = document.getElementById(id);
+            menu.classList.toggle('hidden');
+        }
+
+        // Navegación de pestañas (Vistas unificadas)
+        function switchView(viewId) {
+            document.querySelectorAll('.view-panel').forEach(panel => panel.classList.add('hidden'));
+            document.getElementById('view-' + viewId).classList.remove('hidden');
+            
+            // Actualizar título dinámico de la cabecera
+            const titles = {
+                'banco-morfo': 'Banco de Morfometrías',
+                'ingresar-morfo': 'Ingresar Ficha Morfométrica',
+                'hidrograma-unitario': 'Modelación: Hidrograma Unitario'
+            };
+            document.getElementById('page-title').innerText = titles[viewId] || 'SIROH';
+
+            if(viewId === 'hidrograma-unitario') {
+                setTimeout(renderizarHidrograma, 100); // Forzar repintado del gráfico si entra a esa sección
+            }
+        }
+
+        // CONTROLADOR DE CÁLCULOS MORFOMÉTRICOS Y CAUDAL (MÉTODO RACIONAL)
+        function calcularMorfometriaYCaudal() {
+            const area = parseFloat(document.getElementById('input-area').value) || 0;
+            const perimetro = parseFloat(document.getElementById('input-perimetro').value) || 0;
+            const lc = parseFloat(document.getElementById('input-long-cauce').value) || 0;
+            
+            const coefC = parseFloat(document.getElementById('param-c').value) || 0.30;
+            const intensidadI = parseFloat(document.getElementById('param-i').value) || 0;
+
+            let gravelius = 0;
+            let horton = 0;
+            let formaText = "-";
+
+            // Cálculo del Coeficiente de Gravelius: Kc = 0.28 * (P / sqrt(A))
+            if (area > 0 && perimetro > 0) {
+                gravelius = 0.28 * (perimetro / Math.sqrt(area));
+                
+                if (gravelius >= 1.0 && gravelius <= 1.25) formaText = "Clase 1 (Redonda - Alta torrencialidad)";
+                else if (gravelius > 1.25 && gravelius <= 1.50) formaText = "Clase 2 (Oval-Alargada)";
+                else if (gravelius > 1.50) formaText = "Clase 3 (Muy Alargada)";
+            }
+
+            // Cálculo de la Relación de Forma de Horton: Rf = A / (Lc^2)
+            if (area > 0 && lc > 0) {
+                horton = area / Math.pow(lc, 2);
+            }
+
+            // Estimación del Caudal Pico Máximo (Método Racional): Q = (C * I * A) / 3.6
+            // Q = m3/s, C = dimensional, I = mm/h, A = Km2
+            let caudal = 0;
+            if (area > 0 && intensidadI > 0) {
+                caudal = (coefC * intensidadI * area) / 3.6;
+            }
+
+            // Inyección de resultados en tiempo real en la vista
+            document.getElementById('calc-gravelius').innerText = gravelius.toFixed(3);
+            document.getElementById('calc-forma').innerText = formaText;
+            document.getElementById('calc-horton').innerText = horton.toFixed(3);
+            document.getElementById('calc-caudal').innerText = caudal.toFixed(2) + " m³/s";
+        }
+
+        // MOTOR GRÁFICO DEL HIDROGRAMA UNITARIO
+        let miGraficoHU = null;
+        function renderizarHidrograma() {
+            const ctx = document.getElementById('canvasHidrograma').getContext('2d');
+            
+            // Extraer valores cargados de la tabla
+            const inputsQ = document.querySelectorAll('.hu-q-val');
+            let dataQ = [];
+            let labelsTiempo = [];
+            
+            inputsQ.forEach((input, index) => {
+                dataQ.push(parseFloat(input.value) || 0);
+                labelsTiempo.push("T + " + index + "h");
+            });
+
+            // Destruir instancia previa si existe para evitar solapamientos visuales
+            if (miGraficoHU) {
+                miGraficoHU.destroy();
+            }
+
+            // Renderizar la curva mediante Chart.js
+            miGraficoHU = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labelsTiempo,
+                    datasets: [{
+                        label: 'Escurrimiento Directo (m³/s por cm de lluvia)',
+                        data: dataQ,
+                        borderColor: '#059669', // Emerald 600
+                        backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4, // Suavizado de curva
+                        pointBackgroundColor: '#047857'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: { display: true, text: 'Caudal Unitario (m³/s/cm)', font: { weight: 'bold' } }
+                        },
+                        x: {
+                            title: { display: true, text: 'Tiempo de Respuesta', font: { weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
