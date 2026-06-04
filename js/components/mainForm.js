@@ -11,7 +11,7 @@ class MainForm{
 
         this.handleSubmit()
 
-        this.disableRequired()
+        //this.disableRequired()
 
     }
 
@@ -23,7 +23,7 @@ class MainForm{
 
             const result = await setRegistry(dataObj);
 
-            if(result.status === "success"){
+            if(result?.status === "success"){
                 console.log(result)
                 toast.newToast("success", "Nuevo registro agregado!");
                 this.resetForm();

@@ -23,7 +23,7 @@ async function reserveID(){
 }
 
 async function setRegistry(dataObj){
-    try{
+    //try{
         const fetchConfig = {
             method: 'POST',
             headers: {
@@ -34,14 +34,12 @@ async function setRegistry(dataObj){
         }
 
         const response = await fetch("./php/api/ficha_eoh.php", fetchConfig);
-        if(!response.ok) throw new Error(`Response not OK :( \n ${response.status}`);
+        console.log(response)
+        if(!response.ok) throw new Error(`Response not OK \n ${response.status}`);
         const data = await response.json();
         return data;
 
-    }catch(e){
-        console.log(`ERROR: ${e}`);
-    }
+    //}catch(e){console.log(e)}
 
 }
-
 export  { reserveID, setRegistry };
