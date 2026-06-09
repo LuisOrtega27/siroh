@@ -1,9 +1,9 @@
 .toast-container{
-    font-size: 14px;
     position: fixed;
+    font-size: 14px;
     top: 50px;
     left: 0;
-    z-index: 1000;;
+    z-index: 1000;
 }
 .toast-container .toast{
     position: relative;
@@ -17,6 +17,7 @@
     animation: fadeIn 0.5s ease-out;
     overflow: hidden;
     border: #fff solid 2px;
+    z-index: 1000;
 }
 .toast.success{
     --context-color: #2e2;

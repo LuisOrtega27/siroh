@@ -6,14 +6,14 @@ import form from "./mainForm.js"
 import toast from "./toast.js"
 
 class MainNav{
-    constructor(createBtnId, updateBtnId){
-        this.nav = document.querySelector("#main_menu")
-        this.createBtn = document.querySelector(`#${createBtnId}`)
-        this.updateBtn = document.querySelector(`#${updateBtnId}`)
+    constructor(nav, nuevo, ver){
+        this.main_nav = document.getElementById(nav)
+        this.link_nuevo = document.getElementById(nuevo)
+        this.link_ver = document.getElementById(ver)
 
-        if (this.createBtn) {
-            this.createBtn.addEventListener("click", (e)=>{
-                if(e.target === this.createBtn){
+        if (this.link_nuevo) {
+            this.link_nuevo.addEventListener("click", (e)=>{
+                if(e.target === this.link_nuevo){
                     this.disableBtns()
 
                     reserveID().then(ID =>{
@@ -30,16 +30,28 @@ class MainNav{
     }
 
     disableBtns(){
-        if (this.createBtn) this.createBtn.classList.add("input-disabled");
-        if (this.updateBtn) this.updateBtn.classList.add("input-disabled");
+        if (this.link_nuevo){
+            this.link_nuevo.classList.add("input-disabled");
+            this.link_nuevo.setAttribute("tabIndex", "-1");
+        } 
+        if (this.link_ver){
+            this.link_ver.classList.add("input-disabled");
+            this.link_nuevo.setAttribute("tabIndex", "-1");
+        }
     }
     enableBtns(){
-        if (this.createBtn) this.createBtn.classList.remove("input-disabled");
-        if (this.updateBtn) this.updateBtn.classList.remove("input-disabled");
+        if (this.link_nuevo){
+            this.link_nuevo.classList.remove("input-disabled");
+            this.link_nuevo.removeAttribute("tabIndex");
+        } 
+        if (this.link_ver){
+            this.link_ver.classList.remove("input-disabled");
+            this.link_nuevo.removeAttribute("tabIndex");
+        } 
     }
 
 }
 
-const mainNav = new MainNav("main_menu__createRegistry", "main_menu__updateRegistry")
+const mainNav = new MainNav("main-menu" ,"sub-link-nuevo", "sub-link-ver")
 
 export default mainNav;

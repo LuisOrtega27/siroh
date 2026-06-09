@@ -33,13 +33,11 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-
-
     
-    updateRegistryBtn.addEventListener('click', () => {
-        const submitBtn = document.querySelector("#main_form-submit")
-        submitBtn.setAttribute("data-update", "true")
-        handleUpdate()
-    });
+    // updateRegistryBtn.addEventListener('click', () => {
+    //     const submitBtn = document.querySelector("#main-form-submit")
+    //     submitBtn.setAttribute("data-update", "true")
+    //     handleUpdate()
+    // });
 
 })
