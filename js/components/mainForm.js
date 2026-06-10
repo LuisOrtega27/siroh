@@ -3,6 +3,7 @@
 import { setRegistry } from "../services/ficha_eoh.js"
 import mainNav from "./mainNav.js";
 import toast from "./toast.js";
+import { modalMap } from "./modals.js";
 
 class MainForm{
 
@@ -12,7 +13,7 @@ class MainForm{
 
         this.handleSubmit()
 
-        document.querySelector("#map-btn").addEventListener("click", this.handleMapBtn)
+        document.querySelector("#label-map-img").addEventListener("click", this.handleMapBtn)
 
         // this.disableRequired();
 
@@ -41,7 +42,8 @@ class MainForm{
     }
 
     handleMapBtn(){
-        toast.newToast("error", "Funcionalidad No Implementada Todabia :p")
+        modalMap.open()
+        // toast.newToast("warning", "Funcionalidad en Progreso")
     }
 
     set_Id(id){

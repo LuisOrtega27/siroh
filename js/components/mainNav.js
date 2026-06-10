@@ -4,6 +4,7 @@ import  {reserveID} from "../services/ficha_eoh.js"
 
 import form from "./mainForm.js"
 import toast from "./toast.js"
+import { modalSearch } from "./modals.js"
 
 class MainNav{
     constructor(nav, nuevo, ver){
@@ -26,7 +27,14 @@ class MainNav{
 
                 }
             })
-        }
+        }else console.log("El elemento link_nuevo no existe")
+
+        if(this.link_nuevo){
+            this.link_ver.addEventListener("click",()=>{
+                toast.newToast("warning", "Funcionalidad en progreso")
+                modalSearch.open()
+            })
+        }else console.log("El elemento link_ver no existe")
     }
 
     disableBtns(){

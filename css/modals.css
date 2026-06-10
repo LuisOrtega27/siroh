@@ -20,42 +20,59 @@
     background: rgba(0, 0, 0, 0.4);
 }
 
-.modal-body {   
+.modal-form {   
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-sizing: border-box;
     position: relative;
-    width: 90vw;
-    max-width: 800px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    min-height: 80%;
+    aspect-ratio: 16/9;
+    border-radius: 12px;
     padding: 16px;
-    padding-top: 32px;
-    font-size: 2em;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
 }
-.modal-controls{
-    top: 0px;
-    position: absolute;
-    height: 40px;
+
+.modal-constrols-container{
+    text-align: right;
+    /* background-color: aqua; */
+}
+.modal-constrols-container > input{
+    display: inline-block;
+    height: 50px;
     aspect-ratio: 1/1;
-    padding: 0;
-    background: none;
-    border: none;
-    font-size: 1.5em;
+    font-size: 2em;
+    font-weight: 900;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     cursor: pointer;
+    border: none;
+    background: none;
+    transition: scale 0.3s ease;
 }
-.modal-close_btn {
-    right: 0px;
-}
-.modal-return_btn{
-    left: 0px;
+.modal-constrols-container > button:active{
+    scale: 0.8;
 }
 
-.modal-title { /* modal title styling placeholder */ }
-.modal-buttons { /* modal buttons container */ }
-.btn { /* basic button reset (project-wide styles in general.css) */ }
+.modal-title{
+    text-align: center;
+}
 
+.modal-body{
+    width: 100%;
+    flex-grow: 1;
+    border-radius: 8px;
+    border: none;
+    overflow: clip;
+}
+
+#map{
+    border-radius: 8px;
+    overflow: clip;
+}
 
 #map{
     width: 100%;
-    aspect-ratio: 16/9;
+    height: 100%;
     border: solid 2px #000;
 }

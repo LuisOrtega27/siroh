@@ -2,12 +2,21 @@
 class Toast{
 
     constructor(toastContainer){
-        this.toastContainer = document.getElementById(toastContainer);;
+        // this.toastContainer = document.getElementById(toastContainer);
+        this.toastContainer = this.createToastContainer()
     }
 
-    newToast(color, message){
+    createToastContainer(){
+        const toastContainer = document.createElement("div");
+        toastContainer.classList.add("toast-container");
+        toastContainer.id = "toast-container";
+        document.body.appendChild(toastContainer);
+        return toastContainer;
+    }
+
+    newToast(context, message){
         const toast = document.createElement("DIV");
-        toast.className = `toast ${color}`;
+        toast.className = `toast ${context}`;
         toast.innerHTML = `
             <div class="icon"></div>
             <p class="message">${message}</p>

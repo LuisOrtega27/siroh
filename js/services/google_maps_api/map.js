@@ -6,7 +6,7 @@ import { decimalToUTM } from "./convert_coord_deci_utm.js"
 
 // MAP MODAL
 const modal_map = document.querySelector("#modal-map")
-const modal_map_btn = document.querySelector("#modal-map-btn")
+const modal_map_btn = document.querySelector("#label-map-btn")
 const mapElement = document.querySelector("#map")
 
 const place_input = document.querySelector("#place-autocomplete")

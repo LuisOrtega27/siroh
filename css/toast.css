@@ -22,6 +22,9 @@
 .toast.success{
     --context-color: #2e2;
 }
+.toast.warning{
+    --context-color: rgb(255, 123, 0);
+}
 .toast.error{
     --context-color: #e22;
 }

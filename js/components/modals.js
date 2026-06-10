@@ -1,43 +1,76 @@
 'use strict'
 
-import { handleUpdate } from './formActions.js';
+class Modal{
+    constructor({id, title, content}){
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.dialog = this.createModal();
+    }
 
-window.addEventListener('DOMContentLoaded', () => {
+    createModal(){
+        const dialog = document.createElement("dialog");
+        dialog.classList.add("modal");
+        dialog.id = this.id;
 
-    // NEW REGISTRY MODAL
-    const modals = document.querySelectorAll('.modal');
+        dialog.innerHTML = 
+        `
+            <form action="#"  class="modal-form">
 
-    // MODAL CONTROLS
-    const closeModalBtns = document.querySelectorAll('.modal-close_btn');
-    // const ReturnModalBtn = document.querySelector('.modal-return_btn');
+                <div class="modal-constrols-container">
+                    <input type="button" class="modal-close-btn" value="X">
+                </div>
 
-    // NEW REGISTRY FORM BUTTONS
-    const updateRegistryBtn = document.querySelector('#modal-btn_update_Registry');
+                <h2 class="modal-title">${this.title}</h2>
+                
+                <div class="modal-body">${this.content}</div>
+                
+            </form>
+        `;
+
+        dialog.querySelector(".modal-close-btn").addEventListener("click",()=> this.close() );
+
+        document.body.appendChild(dialog);
+
+        return dialog;
+    }
+
+    open(){
+        console.log("Modal Opened");
+        this.dialog.showModal();
+    }
+
+    close(){
+        console.log("Modal Closed");
+        this.dialog.close();
+    }
+}
 
 
+const modalMap = new Modal({
+    id: "modal-map",
+    title: "Integracion con GoogleMaps",
+    content: `
+        <div class="modal-map" id="map"></div>
+        
+        <div class="map_searchBlock">
+            <input type="text" id="place-autocomplete" class="map_input">
+            <gmpx-place-autocomplete id="place-autocomplete" ></gmpx-place-autocomplete>
+            <input id="place-autocomplete" type="text" placeholder="Buscar dirección...">
+        <!-- 
+            -->
+        </div>
+    `
+});
 
-    // ACTION: close modal when clicking outside of it
-    modals.forEach(modal=>{
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                modal.close();
-            }
-        });
-    }) 
-    
+const modalSearch = new Modal({
+    id: "modal-search", 
+    title: "Buscar Ficha", 
+    content: `
+        <input type="number" id="modal-search">
+        <input type="submit" value="Buscar">
+    `
+});
 
-    // ACTION: Close modal when clicking on close buttons
-    closeModalBtns.forEach(btn => {
-        btn.addEventListener('click', (event) => {
-            event.target.parentNode.parentNode.close()
-        });
-    });
 
-    
-    // updateRegistryBtn.addEventListener('click', () => {
-    //     const submitBtn = document.querySelector("#main-form-submit")
-    //     submitBtn.setAttribute("data-update", "true")
-    //     handleUpdate()
-    // });
-
-})
+export {modalMap, modalSearch};

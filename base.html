@@ -3,27 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="./imgs/icons/redStar_icon.png" type="image/x-icon">
+    
     <title>SIGHIL - Sistema de Información Geográfica e Hidrológica de Libertador</title>
     
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/toast.css">
+    <link rel="stylesheet" href="./css/modals.css">
 </head>
 <body>
-    <div class="toast-container" id="toast-container"></div>
-
-    <dialog class="modal" id="modal-map">
-        <form action="#"  class="modal-body">
-            <button type="button" class="modal-controls modal-close_btn">&times;</button>
-            <div id="map"></div>
-            <div class="map_searchBlock">
-                <!-- <input type="text" id="place-autocomplete" class="map_input"> -->
-                <gmpx-place-autocomplete id="place-autocomplete" ></gmpx-place-autocomplete>
-                <!-- <input id="place-autocomplete" type="text" placeholder="Buscar dirección..."> -->
-            </div>
-        </form>
-    </dialog>
-
-
+    <!-- <div class="toast-container" id="toast-container"></div> -->
 
     <div class="sidebar">
         <div class="brand-area">
@@ -1548,20 +1538,18 @@
     <script src="./js/base.js" defer></script>
     <script type="module" src="./js/components/mainNav.js" defer></script>
     <script type="module" src="./js/components/mainForm.js" defer></script>
-    <script type="module" src="./js/components/modals.js" defer></script>    
 
     <script src="./js/helpers/inputRules.js" defer></script>
     
+    
     <script type="module" src="./js/services/google_maps_api/map.js" defer></script>
-
-
      <!-- GOOGLE MAPS (COMPONENTES) -->
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js" defer></script>
     <!-- Este es el importante para los componentes de Maps -->
     <script type="module" src="https://unpkg.com/@googlemaps/extended-component-library" defer></script>
 
     <!-- GOOGLE MAPS API -->
-    <script id="gp_api">
+    <script id="gp_api" defer>
         (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b[q]||(b[q]={}),f=d.libraries||(d.libraries={}),e=a=Symbol();k=new Promise((f,r)=>{h={key: "AIzaSyAPA21v1E06YuptbIYOjUp9Fd2VtOZ9BIA", v: "weekly", libraries: ["places", "marker"]};a=c=>{f(h);};m.head.append(a=m.createElement("script"));a.src=`https://maps.googleapis.com/maps/api/js?v=beta&key=${h.key}&callback=initMap&libraries=${h.libraries.join(",")}&loading=async`;});d[l]=c=>f[c]||(f[c]=k.then(()=>f[c]||(f[c]=new Promise((p,r)=>b[l](c,p,r)))));})
         ({});
     </script>
