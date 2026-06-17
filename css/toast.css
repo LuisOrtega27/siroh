@@ -8,28 +8,19 @@
 .toast-container .toast{
     position: relative;
     display: flex;
-    background: #fff;
-    border-radius: 10px;
     min-width: 400px;
+    color: #000;
     margin: 20px;
     padding: 20px;
-    box-shadow: 0px 0px 10px var(--context-color);
-    animation: fadeIn 0.5s ease-out;
-    overflow: hidden;
+    background: #fff;
     border: #fff solid 2px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px var(--context-color);
+    overflow: hidden;
     z-index: 1000;
+    animation: fadeIn 0.5s ease-out;
 }
-.toast.success{
-    --context-color: #2e2;
-}
-.toast.warning{
-    --context-color: rgb(255, 123, 0);
-}
-.toast.error{
-    --context-color: #e22;
-}
-
-.toast::before{
+.toast::after{
     display: inline-block;
     position: absolute;
     bottom: 0;
@@ -40,6 +31,27 @@
     background-color: var(--context-color);
     animation: timer 3s linear;
 }
+
+.toast.success{
+    --context-color: #2e2;
+}
+.toast.warning{
+    --context-color: rgb(255, 123, 0);
+}
+.toast.error{
+    --context-color: #e22;
+}
+
+.toast.loading{
+    --context-color: #28e;
+}
+
+.toast.loading::after{
+    animation: none;
+}
+
+
+
 
 .toast.icon{
     width: 10px;
