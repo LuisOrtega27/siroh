@@ -19,10 +19,17 @@
     --border-muted: #cbd5e1;
 
     --sidebar-width: 290px;
+    
+    scroll-behavior: smooth;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-body { background-color: var(--bg-slate); color: var(--text-main); display: flex; min-height: 100vh; }
+body { 
+    background-color: var(--bg-slate); 
+    color: var(--text-main); 
+    display: flex; 
+    min-height: 100vh; 
+}
 
 /* SIDEBAR / PANEL LATERAL */
 .sidebar {
@@ -133,10 +140,25 @@ body { background-color: var(--bg-slate); color: var(--text-main); display: flex
 .tab-btn { background: #cbd5e1; border: none; padding: 10px 14px; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 5px 5px 0 0; color: #475569; text-transform: uppercase; white-space: nowrap; }
 .tab-btn.active-tab { background: white; color: var(--primary-blue); border-bottom: 2px solid white; }
 
-.sub-content-view { display: none; }
-.sub-content-view.active-sub { display: block; }
 
 /* FORMULARIOS EXPANDIDOS */
+#form-siroh{
+    display: flex;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+}
+#form-siroh::-webkit-scrollbar{
+    display: none;
+}
+
+.sub-content-view{
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    flex-basis: 100%;
+
+    scroll-margin-top: 150px;
+}
 
 #form-siroh input:invalid{
     border-color: var(--alert-red);
@@ -148,7 +170,6 @@ body { background-color: var(--bg-slate); color: var(--text-main); display: flex
 }
 
 #label-map-btn{
-    /* flex-grow: 1; */
     margin-top: 15px;
 }
 #label-map-img{
