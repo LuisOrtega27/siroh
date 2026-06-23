@@ -23,7 +23,8 @@
             <h2>SIGHIL</h2>
             <p>Infraestructura Geográfica e Hidrológica</p>
             <ul class="nav-menu" id="main-menu">
-                <li><a onclick="switchPage('geoportal')" id="link-geoportal" class="active">🌐 Geoportal Hídrico</a></li>
+                <li><a onclick="switchPage('territorial')" id="link-territorial" class="active"> &times; Gestion territorial</a></li>
+                <li><a onclick="switchPage('geoportal')" id="link-geoportal">🌐 Geoportal Hídrico</a></li>
                 <li>
                     <a onclick="switchPage('siroh')" id="link-siroh">📋 SIROH (Obras)</a>
                     <ul class="submenu-formulario_eoh" id="sub-for-list">
@@ -71,7 +72,159 @@
             </div>
         </div>
 
-        <div id="page-geoportal" class="page-section active-page">
+        
+        <div id="page-territorial" class="page-section active-page">
+
+            <div class="card-panel">
+
+                <h2>Gestion de Inventario de Cuerpos de Agua</h2>
+                <div class="subtitle">Formulario Tecnico de Gestion de Cuerpos de Agua</div>
+    
+                <form id="form-hidro">
+            
+                    <div class="form-seccion">
+    
+                        <div class="checkbox-section-title">1 Identificación y Clasificación Básica</div>
+                        
+                        <div class="form-row">
+    
+                            <div class="form-group">
+                        
+                                <label for="hidro__tipo_cuerpo_agua">Tipo de Cuerpo de Agua <span class="required">*</span></label>
+                                <select name="hidro__tipo_cuerpo_agua" id="hidro__tipo_cuerpo_agua" required>
+                                    <option value="" disabled selected>Seleccione una opción...</option>
+                                    <option value="Rio">Río</option>
+                                    <option value="Quebrada">Quebrada</option>
+                                    <option value="Torrentera">Torrentera</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="hidro__nombre">Nombre del Cuerpo de Agua <span class="required">*</span></label>
+                                <input type="text" name="hidro__nombre" id="hidro__nombre" placeholder="Ej. Catuche" required>
+                            </div>
+                        </div>
+                        
+                        <h5>Jerarquía del Flujo <span class="required">*</span></h5>
+                        <div class="checkbox-grid">
+                            
+                            <div class="checkbox-item">
+                                <input type="radio" name="hidro__jerarquia_flujo" id="hidro__jerarquia_flujo__principal" value="Principal" checked> 
+                                <label for="hidro__jerarquia_flujo__principal" class="radio-label">Curso Principal</label>
+                            </div>
+        
+                            <div class="checkbox-item">
+                                <input type="radio" name="hidro__jerarquia_flujo" id="hidro__jerarquia_flujo__secundario" value="Secundario"> 
+                                <label for="hidro__jerarquia_flujo__secundario" class="radio-label">Curso Secundario / Afluente</label>
+                            </div>
+    
+                        </div>
+    
+                    </div>
+    
+                    <div class="form-seccion">
+                        <div class="checkbox-section-title">2 Zonificación Hidrográfica</div>
+    
+                        <div class="form-row">
+    
+                            <div class="form-group">
+                                <label>Cuenca Principal <span class="required">*</span></label>
+                                <select id="cuenca_principal" name="cuenca_principal" required>
+                                    <option value="" disabled selected>Seleccione...</option>
+                                    <option value="Guaire">Guaire</option>
+                                    <option value="Tacagua">Tacagua</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Sub-cuenca <span class="required">*</span></label>
+                                <select id="sub_cuenca" name="sub_cuenca" disabled required>
+                                    <option value="" disabled selected>Seleccione una sub-cuenca...</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Micro-cuenca</label>
+                                <input type="text" name="micro_cuenca" placeholder="Ej. Tramo Alto">
+                            </div>
+                            
+                        </div>
+    
+                    </div>
+    
+                    <div class="form-seccion">
+    
+                        <div class="checkbox-section-title">3 Parámetros Técnicos y Georreferenciación</div>
+                        
+                        <div id="alerta-cotas" class="alert-error" hidden>
+                            Inconsistencia Hidráulica: La cota mínima de desembocadura no puede ser mayor o igual a la cota de nacimiento.
+                        </div>
+    
+                        <div class="form-row">
+                            
+                            <div class="form-group">
+                                <label for="hidro__cota_maxima">Cota Máxima (msnm) <span class="required">*</span></label>
+                                <input type="number" id="hidro__cota_maxima" name="cota_maxima" placeholder="Naciente" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="hidro__cota_minima">Cota Mínima (msnm) <span class="required">*</span></label>
+                                <input type="number" id="hidro__cota_minima" name="cota_minima" placeholder="Desembocadura" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="hidro__utm_este">Coordenada Este (X) <span class="required">*</span></label>
+                                <input type="number" name="hidro__utm_este" placeholder="Ej. 727639" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="hidro__utm_norte">Coordenada Norte (Y) <span class="required">*</span></label>
+                                <input type="number" name="hidro__utm_norte" placeholder="Ej. 1164731" required>
+                            </div>
+    
+                        </div>
+    
+                        <div class="form-row">
+                            
+                            <div class="form-group">
+                                <label for="hidro__tipo_lecho">Tipo de Lecho / Cauce</label>
+                                <select name="hidro__tipo_lecho" id="hidro__tipo_lecho">
+                                    <option value="Rocoso">Rocoso (Natural)</option>
+                                    <option value="Sedimentario">Sedimentario / Tierra</option>
+                                    <option value="Canalizado">Canalizado en Concreto</option>
+                                    <option value="Mixto">Mixto</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label id="hidro__nivel_riesgo">Estatus de Riesgo de Torrencialidad</label>
+                                <select name="hidro__nivel_riesgo" id="hidro__nivel_riesgo">
+                                    <option value="Bajo">Bajo</option>
+                                    <option value="Moderado" selected>Moderado</option>
+                                    <option value="Alto">Alto (Respuesta de crecida rápida crítica)</option>
+                                </select>
+                            </div>
+    
+                        </div>
+    
+                        <div class="form-group">
+                            <label for="hidro__observaciones">Observaciones Hidráulicas Generales</label>
+                            <textarea name="hidro__observaciones" rows="3" placeholder="Indicar presencia de obras..."></textarea>
+                        </div>
+    
+                    </div>
+    
+                    <div class="form-row">
+                        <button type="reset" id="hidro__btn-limpiar" class="btn btn-secondary">Limpiar</button>
+                        <button type="submit" id="hidro__btn-guardar" class="btn btn-primary">Guardar en Inventario Central</button>
+                    </div>
+                </form>
+                
+            </div>
+            
+        </div>
+
+        <div id="page-geoportal" class="page-section">
             <div class="card-panel">
                 <h2>Consulta y Cruce de Datos Territoriales</h2>
                 <div class="subtitle">Análisis espacial en tiempo real de la poligonal del Municipio Libertador</div>
@@ -104,7 +257,6 @@
                 <div class="subtitle">Formulario Técnico de Evaluación de Infraestructura Fluvial</div>
 
                 <div class="tab-container">
-                    <!-- <button class="tab-btn active-tab" onclick="switchSubTab('siroh', 's-id')" id="btn-s-id">1. Control e Inspectores</button> -->
                     <a class="tab-btn active-tab" href="#view-s-id" id="btn-s-id" onclick="switchSubTab('siroh', 's-id')">1. Control e Inspectores</a>
                     <a class="tab-btn" href="#view-s-entorno" id="btn-s-entorno" onclick="switchSubTab('siroh', 's-entorno')">2. Datos de Cuenca y Entorno</a>
                     <a class="tab-btn" href="#view-s-tipo" id="btn-s-tipo" onclick="switchSubTab('siroh', 's-tipo')">3. Tipo y Detalles de Obra</a>
@@ -1330,6 +1482,7 @@
                     </div>
 
                 </form>
+
             </div>
         </div>
 

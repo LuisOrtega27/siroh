@@ -58,6 +58,7 @@ function switchPage(pageId) {
     const title = document.getElementById('page-title');
     const desc = document.getElementById('page-desc');
 
+    if(pageId === 'territorial') { title.innerText = "Modulo de Gestion de Cuerpos de Agua"; desc.innerText = "Sistema de registro de Cuerpos de Agua"; }
     if(pageId === 'geoportal') { title.innerText = "Geoportal Hídrico Municipal"; desc.innerText = "Visor de mapas interactivo y mapas base (Capas SIG)."; }
     if(pageId === 'siroh') { title.innerText = "Módulo SIROH"; desc.innerText = "Sistema de Inspección y Registro de Obras Hidráulicas."; }
     if(pageId === 'hidrologia') { title.innerText = "Hidrología Municipal"; desc.innerText = "Inventario y caracterización macro de cuencas."; }
