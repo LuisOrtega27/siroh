@@ -47,17 +47,23 @@ try {
     }
     else{
         // ¡Login correcto! Aquí iniciarías la sesión si lo deseas:
-        // session_start();
-        // $_SESSION['usuario_id'] = $usuario['id'];
-        http_response_code(200); // Unauthorized
+        session_start();
+        $_SESSION['autenticado'] = true;
+        $_SESSION['usuario_id'] = $usuario['id'];
+        $_SESSION['nombre'] = $usuario['nombre'];
+        $_SESSION['rol_id'] = $usuario['rol_id'];
+        
+        http_response_code(200); // Authorized
         echo json_encode([
             "success" => true,
             "message" => "¡Inicio de sesión exitoso! Bienvenido " . htmlspecialchars($usuario['nombre'])
         ]);
+
     }
 
 } catch (PDOException $e) {
     http_response_code(500);
+    echo $e;
     echo json_encode(["success" => false, "message" => "Error al procesar la solicitud. \n {$e}"]);
 }
 

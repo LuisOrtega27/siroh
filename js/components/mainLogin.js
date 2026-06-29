@@ -30,12 +30,14 @@ if (!form) {
             if(!result.success) resultToast.newToast("error", result.message)
             else{
                 resultToast.newToast("success", result.message)
+                setTimeout(()=>{window.location.replace("http://localhost/SIROH/base.html")}, 1000);
             }   
             
             loginToast.remove();
 
         } catch (error) {
             console.error('Error procesando el envío del formulario:', error);
+            console.error(error);
         }
         
     })

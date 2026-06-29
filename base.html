@@ -18,7 +18,7 @@
     <div class="sidebar">
         <div class="brand-area">
             <div class="brand-logo-container">
-                <img src="LOGO ALCALDIA NUEVO.fw.png" alt="Logo Alcaldía Municipio Libertador">
+                <img src="./imgs/logos/LOGO ALCALDIA NUEVO.fw.png" alt="Logo Alcaldía Municipio Libertador">
             </div>
             <h2>SIGHIL</h2>
             <p>Infraestructura Geográfica e Hidrológica</p>
@@ -61,14 +61,21 @@
     </div>
 
     <div class="main-container">
+
+        
         
         <div class="top-navbar">
             <div>
                 <h1 id="page-title">Geoportal Hídrico Municipal</h1>
                 <p id="page-desc" style="color: #64748b; font-size: 12.5px; margin-top: 2px;">Visor de mapas interactivo y mapas base (Capas SIG).</p>
             </div>
-            <div style="font-size: 11px; font-weight: bold; background: #e2e8f0; padding: 6px 12px; border-radius: 4px; color: var(--primary-blue);">
-                IMGRAD: Sala Técnica de Control
+
+
+            <div class="login-nav"> 
+                <button style="padding: 10px; border-radius: 20px; corner-shape: bevel;" onclick="cerrarSesion()">cerrar sesion</button>
+                <div style="font-size: 11px; font-weight: bold; background: #e2e8f0; padding: 6px 12px; border-radius: 4px; color: var(--primary-blue);">
+                    IMGRAD: Sala Técnica de Control
+                </div>
             </div>
         </div>
 
@@ -1689,6 +1696,7 @@
 
     </div>
 
+    <script src="./js/services/verificar_sesion.js" defer></script>
     <script src="./js/base.js" defer></script>
     <script type="module" src="./js/components/mainNav.js" defer></script>
     <script type="module" src="./js/components/mainForm.js" defer></script>
