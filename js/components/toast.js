@@ -49,14 +49,13 @@ class Toast{
         `;
 
         // fade == true, the element disapears automaticaly. If false, manipulate te element manualy
-        if(fade) setTimeout( () => this.toastContainer.removeChild(toast), 10000);
+        if(fade) setTimeout( () => this.toastContainer.removeChild(this.toast), 6000);
         
         this.toastContainer.appendChild(this.toast);
 
     }
 
     remove(){
-        console.log("toast manualy removed");
         this.toast.remove()
     }
     

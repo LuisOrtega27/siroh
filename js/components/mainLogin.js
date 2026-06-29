@@ -1,8 +1,8 @@
 "use strict"
 
+import sighil_login from "../services/sighil_login";
 import Toast from "../components/toast"
 
-let toast = new Toast();
 
 const form = document.getElementById("sighil-login");
 
@@ -16,22 +16,26 @@ if (!form) {
     form.addEventListener("submit", async (event)=>{
         event.preventDefault();
 
-        toast.newToast("loading", "Trying to login!", false);
+        let loginToast = new Toast();
+        loginToast.newToast("loading", "Trying to login!", false);
         
         try {
-            
 
             const formData = new FormData(event.target);
             const formObj = Object.fromEntries(formData);
 
-            console.log('FormData entries:');
-            console.log(formObj);
+            let result = await sighil_login(formObj)
 
+            const resultToast = new Toast()
+            if(!result.success) resultToast.newToast("error", result.message)
+            else{
+                resultToast.newToast("success", result.message)
+            }   
             
-            setTimeout(()=> toast.remove(), 10000)
+            loginToast.remove();
 
-        } catch (err) {
-            console.error('Error procesando el envío del formulario:', err);
+        } catch (error) {
+            console.error('Error procesando el envío del formulario:', error);
         }
         
     })

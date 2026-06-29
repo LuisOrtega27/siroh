@@ -1,10 +1,10 @@
 "use strict"
 
+import Toast from "../components/toast";
+
 async function sighil_login(formObj){
 
     try{
-
-    
         const fetchConfig = {
             method: "POST",
             headers: {
@@ -14,15 +14,15 @@ async function sighil_login(formObj){
             body: JSON.stringify(formObj)
         }
     
-        let result = await fetch("./php/api/sighil.php", fetchConfig);
+        let result = await fetch("./php/api/sighil_login.php", fetchConfig);
+        if(!result.ok) throw new Error(result.statusText);
+        
         let data = await result.json();
-
-        console.log(data)
-    
+        return data;
     
     }catch(error){
-        console.log("error trying to login")
-        console.log(error)
+        const toast = new Toast();
+        toast.newToast("error", `<b>error trying to login</b> <br> ${error}`)
     }
 
 }
